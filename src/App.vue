@@ -1,28 +1,38 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" @click.stop="refresh">
+    <router-view />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+  },
+  data () {
+    return {}
+  },
+  computed: {
+    ...mapGetters(['token'])
+  },
+  methods: {
+    refresh () {
+      if (this.token !== localStorage.getItem('loginToken')) {
+        window.location.reload()
+      }
+    }
   }
 }
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-size: 16px;
+  font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu 
 }
 </style>
