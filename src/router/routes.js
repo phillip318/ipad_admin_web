@@ -9,8 +9,13 @@ const routes = [
     children: [{
       path: 'home',
       name: 'Home',
-      component: () => import('@/views/home/index'),
-      meta: { title: '首页', icon: 'home' }
+      component: () => import('@/views/home'),
+      meta: { title: '模板管理' }
+    }, {
+      path: 'vaccin',
+      name: 'Vaccin',
+      component: () => import('@/views/vaccin'),
+      meta: { title: '接种记录' }
     }, {
       path: 'login',
       name: 'Login',

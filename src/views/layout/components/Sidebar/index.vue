@@ -55,22 +55,10 @@ export default {
   },
   methods: {
     getMenu () {
-      this.$http.fetch(`/UserPlatform/MerchantPermission`)
-        .then(res => {
-          if (res.code === 200) {
-            this.routes = res.data
-            if (this.$route.fullPath === '/basic') {
-              if (this.routes.length > 0) {
-                let menu = this.routes[0]
-                if (menu && menu.children.length > 0) {
-                  this.$router.push(menu.children[0].uri)
-                } else {
-                  this.$router.push(menu.uri)
-                }
-              }
-            }
-          }
-        })
+      this.routes = [
+        { name: '模板管理', uri: '/', id: 1, icon: 'el-icon-monitor', children: [] },
+        { name: '接种记录', uri: '/vaccin', id: 2, icon: 'el-icon-reading', children: [] },
+      ]
     }
   }
 }

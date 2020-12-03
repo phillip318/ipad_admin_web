@@ -10,7 +10,7 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu class="user-dropdown" slot="dropdown">
-          <router-link class="inlineBlock" to="/UserAccountCenter/MineHome">
+          <router-link class="inlineBlock" to="/">
             <el-dropdown-item>
               首页
             </el-dropdown-item>

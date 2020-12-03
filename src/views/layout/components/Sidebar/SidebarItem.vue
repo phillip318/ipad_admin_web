@@ -6,6 +6,7 @@
         :to="item.uri === null ? '' : item.uri">
         <el-menu-item :index="indx+''">
           <!-- <svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon> -->
+          <i :class="item.icon"></i>
           <span slot="title">{{item.name}}</span>
         </el-menu-item>
       </router-link>
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import constRoutes from '@/router/routes'
+// import constRoutes from '@/router/routes'
 export default {
   name: 'SidebarItem',
   props: {
@@ -44,6 +45,8 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  created () {
   },
   watch: {
     'routes': function (newVal) {
@@ -62,14 +65,7 @@ export default {
         return false
       }
     },
-    addIcons (arr) {
-      if (arr.length > 0) {
-        arr.map((item) => {
-          const v = constRoutes.find((v) => { return v.path === item.uri })
-          item.icon = v.meta.icon
-          return item
-        })
-      } 
+    addIcons () {
     }
   }
 }
