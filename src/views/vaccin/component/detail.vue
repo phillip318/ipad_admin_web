@@ -33,7 +33,7 @@
         <span>接种方确认信息：</span>
       </div>
       <div class="line noBorder">
-        <img src="https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029" alt="">
+        <img src="http://ipad-front.oss-cn-shenzhen.aliyuncs.com/file_160724020600022642.jpg" alt="">
       </div>
     </div>
   </el-dialog>

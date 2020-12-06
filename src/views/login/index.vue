@@ -6,8 +6,8 @@
     <el-card class="login-form-layout">
       <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
         <h2 class="login-title color-main">welcome</h2>
-        <el-form-item prop="username">
-          <el-input placeholder="请输入账号" @keyup.enter.native="handleLogin" v-model="loginForm.username"></el-input>
+        <el-form-item prop="phone">
+          <el-input placeholder="请输入账号" @keyup.enter.native="handleLogin" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" placeholder="请输入密码" @keyup.enter.native="handleLogin" v-model="loginForm.password"></el-input>
@@ -26,30 +26,16 @@ import loginCenterBg from '@/assets/images/loginCenterBg.png'
 export default {
   name: 'Login',
   data () {
-    const validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('用户名不能为空'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginCenterBg,
       loading: false,
       msg: '',
       loginForm: {
-        mobileNo: '',
-        verifyCode: '',
-        username: '',
+        phone: '',
         password: ''
       },
       loginRules: {
-        mobileNo: [{ required: true, trigger: 'blur', validator: validateUsername }, {
-          pattern: /^1[3456789]\d{9}$/,
-          message: '请输入正确的手机号码',
-          trigger: 'blur'
-        }],
-        username: [{ validator: validateUsername, trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入账号', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
     }
@@ -57,7 +43,18 @@ export default {
   created () {},
   methods: {
     handleLogin () {
-      this.$router.push('/')
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.$store.dispatch('Login', this.loginForm)
+            .then(() => {
+              this.loading = false
+              this.$router.push({ path: '/' })
+            })
+        } else {
+          console.log('参数验证不合法！')
+          return false
+        }
+      })
     }
   }
 }

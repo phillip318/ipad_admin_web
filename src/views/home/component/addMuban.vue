@@ -3,14 +3,14 @@
     <div class="addMuban-container">
       <el-form :model="formData" ref="bannerFrom" label-width="150px" size="small" :rules="rules">
         <el-form-item label="知情同意书标题：" prop="types">
-          <el-input placeholder="请输入知情同意书标题" v-model="formData.types"></el-input>
+          <el-input placeholder="请输入知情同意书标题" v-model="formData.tempName"></el-input>
         </el-form-item>
-        <el-form-item label="疫苗种类：" prop="types">
-          <el-input placeholder="请输入疫苗种类，如有多项请用逗号分割" v-model="formData.types"></el-input>
+        <el-form-item label="疫苗种类：" prop="vaccinationTypes">
+          <el-input placeholder="请输入疫苗种类，如有多项请用逗号分割" v-model="formData.vaccinationTypes"></el-input>
         </el-form-item>
         <el-form-item label="模板内容："
                       prop="context">
-          <quill-editor v-model="formData.context" class="ql-editor" ref="quillEditor">
+          <quill-editor v-model="formData.tempContent" class="ql-editor" ref="quillEditor">
           </quill-editor>
         </el-form-item>
       </el-form>
@@ -22,6 +22,7 @@
   </el-dialog>
 </template>
 <script>
+import { ADD_MUBAN_URL } from '@/api'
 export default {
   name: 'AddMuban',
   props: ['visible'],
@@ -29,13 +30,17 @@ export default {
     return {
       rules: {},
       formData: {
-        types: '',
-        context: ''
+        tempName: '',
+        vaccinationTypes: '',
+        tempContent: ''
       }
     }
   },
   methods: {
-    submit () {},
+    async submit () {
+      const { code, data } = await this.$http.postForm(ADD_MUBAN_URL, this.formData)
+      console.log(code ,data)
+    },
     closeHandle () {
       this.$emit('update:visible', false)
     },

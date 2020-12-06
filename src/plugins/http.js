@@ -56,7 +56,7 @@ const fetch = (url, params) => {
   return service.get(url, {params});
 };
 
-const post = (url, data = {}) => {
+const postForm = (url, data = {}) => {
   return service.post(url, data, { allowDots: true }, {
     headers: {
       'Content-Type': 'application/json'
@@ -64,14 +64,15 @@ const post = (url, data = {}) => {
   });
 };
 
+
 export {
   fetch,
-  post
+  postForm
 }
 
 export default {
   install(Vue) {
-    Vue.http = { fetch, post };
+    Vue.http = { fetch, postForm };
     Vue.prototype.$http = Vue.http;
   }
 };
