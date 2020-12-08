@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item label="模板内容："
                       prop="context">
-          <quill-editor v-model="formData.tempContent" class="ql-editor" ref="quillEditor">
+          <quill-editor v-model="formData.tempContent" class="ql-editor" ref="myQuillEditor" :options="editorOption">
           </quill-editor>
         </el-form-item>
       </el-form>
@@ -22,12 +22,34 @@
   </el-dialog>
 </template>
 <script>
-import { ADD_MUBAN_URL } from '@/api'
+import { quillEditor } from 'vue-quill-editor'
+import * as Quill from 'quill'
+let fontSizeStyle = Quill.import('attributors/style/size')
+fontSizeStyle.whitelist = ['12px', '14px', '16px', '20px', '24px', '36px']
+Quill.register(fontSizeStyle, true)
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],
+  [{'color': []}, { 'size': fontSizeStyle.whitelist }],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  [{ indent: '-1' }, { indent: '+1' }],
+  ['link', 'image']
+]
+import { ADD_MUBAN_URL, FETCH_MUBAN_DETAIL } from '@/api'
 export default {
   name: 'AddMuban',
-  props: ['visible'],
+  props: ['visible', 'id'],
+  components: {
+    quillEditor
+  },
   data () {
     return {
+      editorOption: {
+        modules: {
+          toolbar: {
+            container: toolbarOptions
+          }
+        }
+      },
       rules: {},
       formData: {
         tempName: '',
@@ -36,10 +58,36 @@ export default {
       }
     }
   },
+  mounted () {
+    console.log(this.$refs.myQuillEditor)
+     // 工具栏中的图片图标被单击的时候调用这个方法
+     let imgHandler = function (state) {
+      if (state) {
+        document.querySelector('.avatar-uploader input').click()
+      }
+    }
+    // 当工具栏中的图片图标被单击的时候
+    
+    this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', imgHandler)
+  },
+  created () {
+    if (this.id != null) {
+      this.loadData()
+    }
+  },
   methods: {
+    async loadData () {
+      const { code, data } = await this.$http.fetch(FETCH_MUBAN_DETAIL, { id: this.id })
+      if (code === 200) {
+        this.formData = data
+      }
+    },
     async submit () {
       const { code, data } = await this.$http.postForm(ADD_MUBAN_URL, this.formData)
-      console.log(code ,data)
+      if (code === 200) {
+        this.$emit('update:visible', false)
+        this.$emit('onSubmit')
+      }
     },
     closeHandle () {
       this.$emit('update:visible', false)

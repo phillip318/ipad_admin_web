@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <AddMuban v-if="visible" :visible.sync="visible"></AddMuban>
+    <AddMuban v-if="visible" :visible.sync="visible" :id="id" @onSubmit="onSubmit"></AddMuban>
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -30,15 +30,16 @@
                 style="width: 100%;"
                 v-loading="listLoading" border>
         <el-table-column label="序号" width="80" type="index" align="center"></el-table-column>
-        <el-table-column label="模板名称" prop="vaccinTime" align="center">
+        <el-table-column label="模板名称" prop="tempName" align="center"></el-table-column>
+        <el-table-column label="创建时间" prop="createDate" align="center">
           <template slot-scope="scope">
             <i class="el-icon-time" />
-            {{scope.row.vaccinTime | filterDateToStr}}
+            {{scope.row.createDate | filterDateToStr}}
           </template>
         </el-table-column>
         <el-table-column label="操作" prop="status" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" @click="checkDetail(scope.$index, scope.row)">查看详情</el-button>
+            <el-button size="mini" type="text" @click="checkDetail(scope.$index, scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,6 +58,7 @@
   </div>
 </template>
 <script>
+import { FETCH_MUBAN_LIST } from '@/api'
 import AddMuban from './component/addMuban'
 export default {
   name: 'Home',
@@ -72,15 +74,32 @@ export default {
       list: [],
       listLoading: false,
       total: 12,
-      visible: true,  // 查看详情
+      visible: false,  // 查看详情
+      id: null,
       listQuery: {
         pageNum: 1,
         pageSize: 10
       },
     }
   },
-  created () {},
+  created () {
+    this.loadData()
+  },
   methods: {
+    async loadData () {
+      const { code, data } = await this.$http.fetch(FETCH_MUBAN_LIST, this.listQuery)
+      if (code === 200) {
+        this.list = data.list
+        this.total = data.total
+      }
+    },
+    checkDetail (index, row) {
+      this.visible = true
+      this.id = row.id
+    },  
+    onSubmit () {
+      this.handleSizeChange(10)
+    },
     add () {
       this.visible = true
     },
