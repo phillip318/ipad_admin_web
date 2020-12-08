@@ -22,32 +22,25 @@
   </el-dialog>
 </template>
 <script>
-import { quillEditor } from 'vue-quill-editor'
-import * as Quill from 'quill'
-let fontSizeStyle = Quill.import('attributors/style/size')
-fontSizeStyle.whitelist = ['12px', '14px', '16px', '20px', '24px', '36px']
-Quill.register(fontSizeStyle, true)
-const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],
-  [{'color': []}, { 'size': fontSizeStyle.whitelist }],
-  [{ list: 'ordered' }, { list: 'bullet' }],
-  [{ indent: '-1' }, { indent: '+1' }],
-  ['link', 'image']
-]
+import * as Quill from 'quill';
+let fontSizeStyle = Quill.import('attributors/style/size');
+fontSizeStyle.whitelist = ['10px', '12px', '14px', '16px', '20px', '24px', '36px', false];
 import { ADD_MUBAN_URL, FETCH_MUBAN_DETAIL } from '@/api'
 export default {
   name: 'AddMuban',
   props: ['visible', 'id'],
-  components: {
-    quillEditor
-  },
   data () {
     return {
       editorOption: {
         modules: {
-          toolbar: {
-            container: toolbarOptions
-          }
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'size': ['12px', '14px', '16px' ,'18px', '22px', '26px', '30px', '36px', '42px'] }],
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+            ["image"] //上传图片
+          ]
         }
       },
       rules: {},
@@ -59,16 +52,8 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$refs.myQuillEditor)
-     // 工具栏中的图片图标被单击的时候调用这个方法
-     let imgHandler = function (state) {
-      if (state) {
-        document.querySelector('.avatar-uploader input').click()
-      }
-    }
-    // 当工具栏中的图片图标被单击的时候
-    
-    this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', imgHandler)
+    this.$nextTick(() => {
+    })
   },
   created () {
     if (this.id != null) {
@@ -97,7 +82,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .addMuban-container {
-  
   padding: 0 100px 0 50px;
   .ql-editor {
     width: 1000px;
@@ -107,4 +91,5 @@ export default {
     text-align: center;
   }
 }
+
 </style>
