@@ -68,10 +68,10 @@ export default {
       }
     },
     async submit () {
-      const { code, data } = await this.$http.postForm(ADD_MUBAN_URL, this.formData)
+      const { code } = await this.$http.postForm(ADD_MUBAN_URL, this.formData)
       if (code === 200) {
-        this.$emit('update:visible', false)
-        this.$emit('onSubmit')
+        // this.$emit('update:visible', false)
+        // this.$emit('onSubmit')
       }
     },
     closeHandle () {

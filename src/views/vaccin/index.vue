@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <VaccinDetail v-if="visible" :visible.sync="visible" @closeHandle="closeHandle"></VaccinDetail>
+    <VaccinDetail v-if="visible" :visible.sync="visible" :id="id" @closeHandle="closeHandle"></VaccinDetail>
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -39,17 +39,17 @@
                 style="width: 100%;"
                 v-loading="listLoading" border>
         <el-table-column label="序号" width="80" type="index" align="center"></el-table-column>
-        <el-table-column label="接种时间" prop="vaccinTime" align="center">
+        <el-table-column label="接种时间" prop="createDate" align="center">
           <template slot-scope="scope">
             <i class="el-icon-time" />
-            {{scope.row.vaccinTime | filterDateToStr}}
+            {{scope.row.createDate | filterDateToStr}}
           </template>
         </el-table-column>
         <el-table-column label="接种人姓名" prop="vaccinName" align="center"></el-table-column>
-        <el-table-column label="接种类型" prop="vaccinType" align="center"></el-table-column>
-        <el-table-column label="接种疫苗" prop="vaccin" align="center"></el-table-column>
-        <el-table-column label="接种方确认信息" prop="vaccinSign" align="center">
-          <template slot-scope="scope"><img style="height: 60px" :src="scope.row.vaccinSign"></template>
+        <!-- <el-table-column label="接种类型" prop="vaccinType" align="center"></el-table-column> -->
+        <el-table-column label="接种疫苗" prop="vaccinationType" align="center"></el-table-column>
+        <el-table-column label="接种方确认信息" prop="userConfirmFilePath" align="center">
+          <template slot-scope="scope"><img style="height: 60px" :src="scope.row.userConfirmFilePath"></template>
         </el-table-column>
         <el-table-column label="出生年月" prop="vaccinBirthday" align="center">
           <template slot-scope="scope">
@@ -79,6 +79,7 @@
 </template>
 <script>
 import VaccinDetail from './component/detail'
+import { FETCH_VACCIN_LIST } from '@/api'
 export default {
   name: 'Vaccin',
   components: {
@@ -86,13 +87,14 @@ export default {
   },
   data () {
     return {
+      id: null,
       formData: {
         time: null,
         userName: null,
       },
       list: [],
       listLoading: false,
-      total: 12,
+      total: 0,
       visible: false,  // 查看详情
       listQuery: {
         pageNum: 1,
@@ -101,23 +103,32 @@ export default {
     }
   },
   created () {
-    this.list = [
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://ipad-front.oss-cn-shenzhen.aliyuncs.com/file_160724020600022642.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-      { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
-      { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
-    ]
+    this.loadData()
+    // this.list = [
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://ipad-front.oss-cn-shenzhen.aliyuncs.com/file_160724020600022642.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    //   { vaccinTime: new Date(), vaccinName: '罗路', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'http://shopstore.oss-cn-shenzhen.aliyuncs.com/mall/images/1591860548250timg.jpg'  },
+    //   { vaccinTime: new Date(), vaccinName: '派大星', vaccinBirthday: new Date(), vaccinType: '甲型肝炎疫苗接种', vaccin: '甲肝灭活疫苗，自费(进口)', vaccinSign: 'https://dss2.bdstatic.com/6Ot1bjeh1BF3odCf/it/u=3740191206,641788041&fm=74&app=80&f=PNG&size=f121,121?sec=1880279984&t=8605bbae394dfce22f479444ef88c029'  },
+    // ]
   },
   methods: {
-    checkDetail () {
+    async loadData () {
+      const { code, data } = await this.$http.fetch(FETCH_VACCIN_LIST, this.listQuery)
+      if (code === 200) {
+        this.list = data.list
+        this.total = data.total
+      }
+    },
+    checkDetail (index, row) {
+      this.id = row.id
       this.visible = true
     },
     closeHandle () {

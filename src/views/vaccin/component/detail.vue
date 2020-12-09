@@ -3,19 +3,19 @@
     <div class="vaccinDetail-container">
       <div class="line">
         <span>接种日期：</span>
-        <span>2020-12-03 16:58:09</span>
+        <span>{{ detail.createDate }}</span>
       </div>
       <div class="line">
         <span>接种人姓名：</span>
-        <span>罗路</span>
+        <span>{{ detail.userName }}</span>
       </div>
-      <div class="line">
+      <!-- <div class="line">
         <span>接种类型：</span>
         <span>甲型肝炎疫苗接种</span>
-      </div>
+      </div> -->
       <div class="line">
         <span>接种疫苗：</span>
-        <span>甲肝灭活疫苗，自费(进口)</span>
+        <span>{{ detail.vaccinationType }}</span>
       </div>
       <div class="line">
         <span>出生年月：</span>
@@ -23,29 +23,41 @@
       </div>
       <div class="line">
         <span>接种前医师是否询问受种方健康状况：</span>
-        <span>是</span>
+        <span>{{ detail.advisoryHealthStatus == 1 ? '是' : '否' }}</span>
       </div>
       <div class="line">
         <span>经医生检查无禁忌，是否同意接种：</span>
-        <span>是</span>
+        <span>{{ detail.agreeStatus == 1 ? '同意' : '不同意' }}</span>
       </div>
       <div class="line noBorder">
         <span>接种方确认信息：</span>
       </div>
       <div class="line noBorder">
-        <img src="http://ipad-front.oss-cn-shenzhen.aliyuncs.com/file_160724020600022642.jpg" alt="">
+        <img :src="detail.userConfirmFilePath" alt="">
       </div>
     </div>
   </el-dialog>
 </template>
 <script>
+import { FETCH_VACCIN_DETAIL } from '@/api'
 export default {
   name: 'VaccinDetail',
-  props: ['visible'],
+  props: ['visible', 'id'],
   data () {
-    return {}
+    return {
+      detail: {}
+    }
+  },
+  created () {
+    this.loadData()
   },
   methods: {
+    async loadData () {
+      const { code, data } = await this.$http.fetch(FETCH_VACCIN_DETAIL, { id: this.id })
+      if (code === 200) {
+        this.detail = data
+      }
+    },
     closeHandle () {
       this.$emit('update:visible', false)
     }
@@ -63,10 +75,9 @@ export default {
     border-bottom: 1px solid gray;
     >span:nth-of-type(1) {
       margin-right: 80px;
+      min-width: 90px;
     }
     img {
-      width: 300px;
-      height: 300px;
     }
   }
   .noBorder {

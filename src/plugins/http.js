@@ -17,12 +17,6 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   if (store.getters.token) {
     config.headers.common['Authorization'] = getToken()  // 让每个请求携带自定义token 请根据实际情况自行修改
-    if (parseInt(localStorage.getItem('timeOut')) + 30 * 60 * 1000 < Date.parse(new Date())) {
-      store.dispatch('FedLogOut')
-      window.location.reload()
-    } else {
-      localStorage.setItem('timeOut', Date.parse(new Date()))
-    }
   }
   return config
 }, error => {

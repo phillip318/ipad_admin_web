@@ -10,3 +10,7 @@ export const ADD_MUBAN_URL = `${envone}/template/addOrEditTemplate`
 export const FETCH_MUBAN_LIST = `${envone}//template/findTemplates`
 // 模板详情
 export const FETCH_MUBAN_DETAIL = `${envone}/template/findTemplateById`
+// 接种记录列表
+export const FETCH_VACCIN_LIST = `${envone}/vaccination/findVaccinationDetails`
+// 接种记录详情
+export const FETCH_VACCIN_DETAIL = `${envone}/vaccination/findVaccinationDetailById`
