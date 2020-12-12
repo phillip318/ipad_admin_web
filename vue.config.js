@@ -20,7 +20,7 @@ module.exports = {
   },
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_TITLE === 'production') {
-      config.plugins.push(new BundleAnalyzerPlugin())
+      // config.plugins.push(new BundleAnalyzerPlugin())
     }
   },
   

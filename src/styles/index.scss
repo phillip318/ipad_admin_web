@@ -156,3 +156,16 @@ a:hover {
   color: #909399;
 }
 
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-col {
+  display: flex;
+  align-items: center;
+}
+.flex-row {
+  display: flex;
+  justify-content: center;
+}

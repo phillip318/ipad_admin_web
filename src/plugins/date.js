@@ -1,17 +1,14 @@
 import { formatDate } from '@/utils/date'
+const timeFotmat = {
+  'year-month': 'yyyy-MM',
+  'date': 'yyyy-MM-dd',
+  'time': 'yyyy-MM-dd hh:mm:ss'
+}
 export default {
   install (Vue) {
     // date 类型 格式化
-    Vue.filter('filterDateToStr', function (value) {
-      return value ? formatDate(new Date(Number(value)), 'yyyy-MM-dd hh:mm:ss') : ''
-    })
-    // 字符串截取 年份  yyyy-MM-dd hh:mm:ss => yyyy-MM-dd
-    Vue.filter('filterYear', function (value) {
-      return value ? value.substr(0, 10) : null
-    })
-    // date 类型 格式化
-    Vue.filter('filterDateToStrShort', function (value) {
-      return value ? formatDate(new Date(Number(value)), 'yyyy-MM-dd') : ''
+    Vue.filter('filterDateByCustom', function (value, dateType) {
+      return value ? formatDate(new Date(Number(value)), timeFotmat[dateType]) : ''
     })
   }
 }

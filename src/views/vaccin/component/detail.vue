@@ -3,10 +3,10 @@
     <div class="vaccinDetail-container">
       <div class="line">
         <span>接种日期：</span>
-        <span>{{ detail.createDate }}</span>
+        <span>{{ detail.createDate | filterDateByCustom('time') }}</span>
       </div>
       <div class="line">
-        <span>接种人姓名：</span>
+        <span>受种人姓名：</span>
         <span>{{ detail.userName }}</span>
       </div>
       <!-- <div class="line">

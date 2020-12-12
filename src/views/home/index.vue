@@ -34,7 +34,7 @@
         <el-table-column label="创建时间" prop="createDate" align="center">
           <template slot-scope="scope">
             <i class="el-icon-time" />
-            {{scope.row.createDate | filterDateToStr}}
+            {{scope.row.createDate | filterDateByCustom('time')}}
           </template>
         </el-table-column>
         <el-table-column label="操作" prop="status" align="center">

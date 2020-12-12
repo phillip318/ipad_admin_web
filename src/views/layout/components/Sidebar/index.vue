@@ -35,15 +35,6 @@ export default {
       'sidebar',
       'userId'
     ]),
-    // routes () {
-    //   let arr = []
-    //   for (let n of this.$router.options.routes) {
-    //     if (!n.hidden) {
-    //       arr.push(n)
-    //     }
-    //   }
-    //   return arr
-    // },
     isCollapse () {
       return !this.sidebar.opened
     }
@@ -57,7 +48,8 @@ export default {
     getMenu () {
       this.routes = [
         { name: '模板管理', uri: '/', id: 1, icon: 'el-icon-monitor', children: [] },
-        { name: '接种记录', uri: '/vaccin', id: 2, icon: 'el-icon-reading', children: [] },
+        { name: '受种人档案', uri: '/recipientFile', id: 2, icon: 'el-icon-user', children: [] },
+        { name: '接种记录', uri: '/vaccin', id: 3, icon: 'el-icon-reading', children: [] },
       ]
     }
   }

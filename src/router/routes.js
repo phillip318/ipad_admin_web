@@ -12,6 +12,11 @@ const routes = [
       component: () => import('@/views/home'),
       meta: { title: '模板管理' }
     }, {
+      path: 'recipientFile',
+      name: 'RecipientFile',
+      component: () => import('@/views/recipientFile'),
+      meta: { title: '受种人档案' }
+    }, {
       path: 'vaccin',
       name: 'Vaccin',
       component: () => import('@/views/vaccin'),
